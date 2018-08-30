@@ -8,8 +8,14 @@ const appStyle = css`
 `
 
 const emojiStyle = css`
-    font-size: 26vw;
+    font-size: 24vw;
+    margin: 0 auto;
+    max-width: 800px;
     text-align: center;
+
+    @media (min-width: 860px) {
+        font-size: 13em;
+    }
 `
 
 const EMOJI_SET = {
