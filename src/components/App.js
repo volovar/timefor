@@ -46,13 +46,12 @@ class App extends React.Component {
             currentEmoji: this.getTimeFor()
         }
 
-        this.updateBackgroundColor = this.updateBackgroundColor.bind(this)
-        this.updateEmoji = this.updateEmoji.bind(this)
-
         this._rif = requestIntervalFrame(() => {
             this._time = getCurrentTime()
-            this.updateBackgroundColor()
-            this.updateEmoji()
+            this.setState({
+                background: this.getBackgroundColor(),
+                currentEmoji: this.getTimeFor()
+            })
         })
     }
 
@@ -61,12 +60,12 @@ class App extends React.Component {
     }
 
     getBackgroundColor() {
-        const hour = this._time.hours
         const L_MIN = 10
         const L_MAX = 80
-        let l = 80
 
-        // TODO: make this return different colors based on the time
+        let time = Math.round(this._time.hours + (this._time.minutes / 60))
+        let lAmount = Math.abs(12 - time)
+        let l = L_MAX - (((L_MAX - L_MIN) / 12) * lAmount)
 
         return `hsl(198, 70%, ${l}%)`
     }
@@ -80,25 +79,13 @@ class App extends React.Component {
             type = 'coffee'
         } else if (time.hours === 17 && time.minutes >= 20) {
             type = 'leaving'
-        } else if (time.hours === 12 && time.hours < 1) {
+        } else if (time.hours === 12 && time.hours < 13) {
             type = 'lunch'
         } else {
             type = 'default'
         }
 
         return getEmoji(type)
-    }
-
-    updateBackgroundColor() {
-        let state = { ...this.state }
-        state.background = this.getBackgroundColor()
-        this.setState({ ...state })
-    }
-
-    updateEmoji() {
-        let state = { ...this.state }
-        state.currentEmoji = this.getTimeFor()
-        this.setState({ ...state })
     }
 
     render() {
